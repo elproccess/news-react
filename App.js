@@ -1,21 +1,111 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useState, useEffect, useCallback } from "react";
+import { Avatar, Button, Card, Title, Paragraph } from "react-native-paper";
+import {
+  SafeArea,
+  SafeAreaSafeAreaView,
+  SafeAreaView,
+  Text,
+  Image,
+  FlatList,
+  StyleSheet,
+  ActivityIndicator,
+} from "react-native";
+//import Card from './component/card';
+import ButtonList from "./component/buttonList";
 
-export default function App() {
+const App = () => {
+  const countries = [
+    { name: "America", tag: "us" },
+    { name: "United Kingdom", tag: "gb" },
+    { name: "Canada", tag: "ca" },
+    { name: "France", tag: "fr" },
+  ];
+
+  const [isLoading, setLoading] = useState(true);
+  const [data, setData] = useState([]);
+  const [buttonstring, dataChanged] = useState("us");
+
+  useEffect(() => {
+    fetch(
+      "https://newsapi.org/v2/top-headlines?country=" +
+        buttonstring +
+        "&apiKey=3df90a82890b490ba7fe3739c01f6c17"
+    )
+      .then((response) => response.json())
+      .then((json) => setData(json.articles))
+      .catch((error) => alert(error))
+      .finally(() => setLoading(false));
+  }, [buttonstring]);
+
+  callback = (props) => {
+    dataChanged(props);
+  };
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <SafeAreaView style={styles.container}>
+      {isLoading ? (
+        <ActivityIndicator />
+      ) : (
+        <SafeAreaView id="d">
+          <SafeAreaView style={styles.safeArea}>
+            <ButtonList parentCallback={this.callback} />
+          </SafeAreaView>
+          <React.Fragment>
+            <FlatList
+              styles={{ height: 250 }}
+              //horizontal={true}
+              scrollEnabled
+              // pagingEnabled={true}
+              // showsHorizontalScrollIndicator={false}
+              // legacyImplementation={false}
+              data={data}
+              keyExtractor={({ id }, index) => index}
+              renderItem={({ item }) => (
+                <Card>
+                  <Card.Content>
+                    <Title>{item.title}</Title>
+                    <Paragraph>{item.source.name}</Paragraph>
+                  </Card.Content>
+                  <Card.Cover source={{ uri: item.urlToImage }} />
+                  <Card.Actions>
+                    <Button>Cancel</Button>
+                    <Button>Ok</Button>
+                  </Card.Actions>
+                </Card>
+              )}
+            />
+          </React.Fragment>
+        </SafeAreaView>
+      )}
+    </SafeAreaView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    paddingTop: 60,
+    height: "100%",
+  },
+
+  safeArea: {
+    paddingTop: 60,
+    height: 100,
+  },
+
+  button: {
+    borderWidth: 0,
+    borderColor: "rgba(0,0,0,0.2)",
+    alignItems: "center",
+    justifyContent: "center",
+    height: 40,
+    backgroundColor: "#3058db",
+    borderRadius: 50,
+  },
+
+  text: {
+    color: "#fff",
   },
 });
+
+export default App;
