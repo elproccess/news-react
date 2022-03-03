@@ -10,10 +10,15 @@ import {
   StyleSheet,
   ActivityIndicator,
 } from "react-native";
-//import Card from './component/card';
-import ButtonList from "./component/buttonList";
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
-const App = () => {
+import AppContext from "./component/AppContext";
+import ButtonList from "./component/buttonList";
+import CardList from "./component/CardList";
+import CardDescription from "./component/CardDescription";
+
+const HomeScreen = ({ navigation }) => {
   const countries = [
     { name: "America", tag: "us" },
     { name: "United Kingdom", tag: "gb" },
@@ -61,17 +66,7 @@ const App = () => {
               data={data}
               keyExtractor={({ id }, index) => index}
               renderItem={({ item }) => (
-                <Card>
-                  <Card.Content>
-                    <Title>{item.title}</Title>
-                    <Paragraph>{item.source.name}</Paragraph>
-                  </Card.Content>
-                  <Card.Cover source={{ uri: item.urlToImage }} />
-                  <Card.Actions>
-                    <Button>Cancel</Button>
-                    <Button>Ok</Button>
-                  </Card.Actions>
-                </Card>
+                <CardList item={item} navigation={handleNavigation} />
               )}
             />
           </React.Fragment>
@@ -79,6 +74,30 @@ const App = () => {
       )}
     </SafeAreaView>
   );
+
+  function handleNavigation(item) {
+    navigation.navigate("NewsDescription", {
+      item: item,
+    });
+  }
+};
+
+const Stack = createNativeStackNavigator();
+
+const App = () => {
+  const [appTitle, setTitle] = useState("");
+  return (
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="NewsDescription" component={NewsDescription} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+};
+
+const NewsDescription = ({ navigation, route }) => {
+  return <CardDescription route={route} />;
 };
 
 const styles = StyleSheet.create({
@@ -90,7 +109,7 @@ const styles = StyleSheet.create({
 
   safeArea: {
     paddingTop: 60,
-    height: 100,
+    height: 43,
   },
 
   button: {
