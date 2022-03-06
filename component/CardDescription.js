@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, Share, useEffect, useCallback } from "react";
 import { Avatar, Button, Card, Title, Paragraph } from "react-native-paper";
 
 const CardDescription = ({ route }) => {

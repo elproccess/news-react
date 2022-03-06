@@ -5,6 +5,9 @@ import {
   SafeAreaSafeAreaView,
   SafeAreaView,
   Text,
+  Alert,
+  Modal,
+  Pressable,
   Image,
   FlatList,
   StyleSheet,
@@ -18,6 +21,8 @@ import ButtonList from "./component/buttonList";
 import CardList from "./component/CardList";
 import CardDescription from "./component/CardDescription";
 
+//import PopupScreen from "./screens/PopupScreen";
+
 const HomeScreen = ({ navigation }) => {
   const countries = [
     { name: "America", tag: "us" },
@@ -29,6 +34,7 @@ const HomeScreen = ({ navigation }) => {
   const [isLoading, setLoading] = useState(true);
   const [data, setData] = useState([]);
   const [buttonstring, dataChanged] = useState("us");
+  const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
     fetch(
@@ -52,6 +58,27 @@ const HomeScreen = ({ navigation }) => {
         <ActivityIndicator />
       ) : (
         <SafeAreaView id="d">
+          <Modal
+            animationType="slide"
+            transparent={true}
+            visible={modalVisible}
+            onRequestClose={() => {
+              Alert.alert("Modal has been closed.");
+              setModalVisible(!modalVisible);
+            }}
+          >
+            <SafeAreaView style={styles.centeredView}>
+              <SafeAreaView style={styles.modalView}>
+                <Text style={styles.modalText}>Hello World!</Text>
+                <Pressable
+                  style={[styles.button, styles.buttonClose]}
+                  onPress={() => setModalVisible(!modalVisible)}
+                >
+                  <Text style={styles.textStyle}>Hide Modal</Text>
+                </Pressable>
+              </SafeAreaView>
+            </SafeAreaView>
+          </Modal>
           <SafeAreaView style={styles.safeArea}>
             <ButtonList parentCallback={this.callback} />
           </SafeAreaView>
@@ -98,6 +125,41 @@ const App = () => {
 
 const NewsDescription = ({ navigation, route }) => {
   return <CardDescription route={route} />;
+};
+
+const PopupScreen = () => {
+  const [modalVisible, setModalVisible] = useState(false);
+  return (
+    <SafeAreaView style={styles.centeredView}>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          Alert.alert("Modal has been closed.");
+          setModalVisible(!modalVisible);
+        }}
+      >
+        <SafeAreaView style={styles.centeredView}>
+          <SafeAreaView style={styles.modalView}>
+            <Text style={styles.modalText}>Hello World!</Text>
+            <Pressable
+              style={[styles.button, styles.buttonClose]}
+              onPress={() => setModalVisible(!modalVisible)}
+            >
+              <Text style={styles.textStyle}>Hide Modal</Text>
+            </Pressable>
+          </SafeAreaView>
+        </SafeAreaView>
+      </Modal>
+      <Pressable
+        style={[styles.button, styles.buttonOpen]}
+        onPress={() => setModalVisible(true)}
+      >
+        <Text style={styles.textStyle}>Show Modal</Text>
+      </Pressable>
+    </SafeAreaView>
+  );
 };
 
 const styles = StyleSheet.create({
