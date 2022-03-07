@@ -15,99 +15,14 @@ import {
 } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import Carousel from "react-native-snap-carousel";
 
 import AppContext from "./component/AppContext";
 import ButtonList from "./component/buttonList";
 import CardList from "./component/CardList";
 import CardDescription from "./component/CardDescription";
 
-//import PopupScreen from "./screens/PopupScreen";
-
-const HomeScreen = ({ navigation }) => {
-  const countries = [
-    { name: "America", tag: "us" },
-    { name: "United Kingdom", tag: "gb" },
-    { name: "Canada", tag: "ca" },
-    { name: "France", tag: "fr" },
-  ];
-
-  const [isLoading, setLoading] = useState(true);
-  const [data, setData] = useState([]);
-  const [buttonstring, dataChanged] = useState("us");
-  const [modalVisible, setModalVisible] = useState(false);
-
-  useEffect(() => {
-    fetch(
-      "https://newsapi.org/v2/top-headlines?country=" +
-        buttonstring +
-        "&apiKey=3df90a82890b490ba7fe3739c01f6c17"
-    )
-      .then((response) => response.json())
-      .then((json) => setData(json.articles))
-      .catch((error) => alert(error))
-      .finally(() => setLoading(false));
-  }, [buttonstring]);
-
-  callback = (props) => {
-    dataChanged(props);
-  };
-
-  return (
-    <SafeAreaView style={styles.container}>
-      {isLoading ? (
-        <ActivityIndicator />
-      ) : (
-        <SafeAreaView id="d">
-          <Modal
-            animationType="slide"
-            transparent={true}
-            visible={modalVisible}
-            onRequestClose={() => {
-              Alert.alert("Modal has been closed.");
-              setModalVisible(!modalVisible);
-            }}
-          >
-            <SafeAreaView style={styles.centeredView}>
-              <SafeAreaView style={styles.modalView}>
-                <Text style={styles.modalText}>Hello World!</Text>
-                <Pressable
-                  style={[styles.button, styles.buttonClose]}
-                  onPress={() => setModalVisible(!modalVisible)}
-                >
-                  <Text style={styles.textStyle}>Hide Modal</Text>
-                </Pressable>
-              </SafeAreaView>
-            </SafeAreaView>
-          </Modal>
-          <SafeAreaView style={styles.safeArea}>
-            <ButtonList parentCallback={this.callback} />
-          </SafeAreaView>
-          <React.Fragment>
-            <FlatList
-              styles={{ height: 250 }}
-              //horizontal={true}
-              scrollEnabled
-              // pagingEnabled={true}
-              // showsHorizontalScrollIndicator={false}
-              // legacyImplementation={false}
-              data={data}
-              keyExtractor={({ id }, index) => index}
-              renderItem={({ item }) => (
-                <CardList item={item} navigation={handleNavigation} />
-              )}
-            />
-          </React.Fragment>
-        </SafeAreaView>
-      )}
-    </SafeAreaView>
-  );
-
-  function handleNavigation(item) {
-    navigation.navigate("NewsDescription", {
-      item: item,
-    });
-  }
-};
+import HmScreen from "./screens/homeScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -116,7 +31,7 @@ const App = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="Home" component={HmScreen} />
         <Stack.Screen name="NewsDescription" component={NewsDescription} />
       </Stack.Navigator>
     </NavigationContainer>
@@ -125,41 +40,6 @@ const App = () => {
 
 const NewsDescription = ({ navigation, route }) => {
   return <CardDescription route={route} />;
-};
-
-const PopupScreen = () => {
-  const [modalVisible, setModalVisible] = useState(false);
-  return (
-    <SafeAreaView style={styles.centeredView}>
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => {
-          Alert.alert("Modal has been closed.");
-          setModalVisible(!modalVisible);
-        }}
-      >
-        <SafeAreaView style={styles.centeredView}>
-          <SafeAreaView style={styles.modalView}>
-            <Text style={styles.modalText}>Hello World!</Text>
-            <Pressable
-              style={[styles.button, styles.buttonClose]}
-              onPress={() => setModalVisible(!modalVisible)}
-            >
-              <Text style={styles.textStyle}>Hide Modal</Text>
-            </Pressable>
-          </SafeAreaView>
-        </SafeAreaView>
-      </Modal>
-      <Pressable
-        style={[styles.button, styles.buttonOpen]}
-        onPress={() => setModalVisible(true)}
-      >
-        <Text style={styles.textStyle}>Show Modal</Text>
-      </Pressable>
-    </SafeAreaView>
-  );
 };
 
 const styles = StyleSheet.create({

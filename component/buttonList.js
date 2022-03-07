@@ -10,7 +10,6 @@ import {
   StyleSheet,
   ActivityIndicator,
 } from "react-native";
-import CustomButton from "./customButton";
 
 const countries = [
   { name: "America", tag: "us" },

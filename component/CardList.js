@@ -9,7 +9,6 @@ import {
   IconButton,
 } from "react-native-paper";
 import { Text, StyleSheet, SafeAreaView, Modal, Pressable } from "react-native";
-
 import CardDescription from "../component/CardDescription";
 
 const CardList = ({ navigation, item }) => {
@@ -31,7 +30,7 @@ const CardList = ({ navigation, item }) => {
             <SafeAreaView style={styles.rowC}>
               <IconButton
                 styles={styles.icon_button}
-                icon="camera"
+                icon="close"
                 color={Colors.red500}
                 size={30}
                 onPress={() => setModalVisible(!modalVisible)}
@@ -53,7 +52,7 @@ const CardList = ({ navigation, item }) => {
       </Modal>
       <Card style={styles.container}>
         <Card.Content>
-          <Title>{item.title}</Title>
+          <Title numberOfLines={2}>{item.title}</Title>
           <Paragraph>{item.source.name}</Paragraph>
         </Card.Content>
         <Card.Cover source={{ uri: item.urlToImage }} />
@@ -64,8 +63,11 @@ const CardList = ({ navigation, item }) => {
           >
             <Text style={styles.text}>description</Text>
           </Button>
-          <Button onPress={() => setModalVisible(!modalVisible)}>
-            PopupScreen
+          <Button
+            style={styles.button_description}
+            onPress={() => setModalVisible(!modalVisible)}
+          >
+            <Text style={styles.text}>PopupScreen</Text>
           </Button>
         </Card.Actions>
       </Card>
@@ -75,13 +77,14 @@ const CardList = ({ navigation, item }) => {
 
 const styles = StyleSheet.create({
   container: {
+    paddingVertical: 10,
     borderColor: "white",
   },
   button_description: {
     alignItems: "center",
     justifyContent: "center",
     paddingVertical: 1,
-    paddingHorizontal: 15,
+    paddingHorizontal: 30,
     borderRadius: 50,
     elevation: 5,
     backgroundColor: "white",
